@@ -14,10 +14,10 @@ struct User {
 
 fn main() {
     let authenticated_user = login();
-    println!("username: {}", authenticated_user.username);
-    println!("role: {:#?}", authenticated_user.role);
+    println!("username: {}", &authenticated_user.username);
+    println!("role: {:#?}", &authenticated_user.role);
     
-    match authenticated_user.role {
+    match &authenticated_user.role {
         Role::Employee => println!("Hello"),
         Role::Manager => println!("Ah, royalty"),
     }
@@ -49,12 +49,14 @@ fn login() -> User {
 
 
         // This is definitely how authentication works
-        if password == SECRET_KEY {
+        if &password == &SECRET_KEY {
             println!("Logged in!");
             return User {
                 username: String::from(username),
                 role: Role::Employee,
             }
+        } else {
+            println!("Incorrect password. Please try again");
         }
     }
 }
