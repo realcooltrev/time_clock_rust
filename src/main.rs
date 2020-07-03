@@ -1,14 +1,26 @@
 use std::io;
 
+#[derive(Debug)]
+enum Role {
+    Employee,
+    Manager,
+}
+
+#[derive(Debug)]
 struct User {
     username: String,
-    role: String,
+    role: Role,
 }
 
 fn main() {
     let authenticated_user = login();
     println!("username: {}", authenticated_user.username);
-    println!("role: {}", authenticated_user.role);
+    println!("role: {:#?}", authenticated_user.role);
+    
+    match authenticated_user.role {
+        Role::Employee => println!("Hello"),
+        Role::Manager => println!("Ah, royalty"),
+    }
 }
 
 fn login() -> User {
@@ -41,7 +53,7 @@ fn login() -> User {
             println!("Logged in!");
             return User {
                 username: String::from(username),
-                role: String::from("employee"),
+                role: Role::Employee,
             }
         }
     }
