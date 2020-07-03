@@ -5,6 +5,7 @@ fn main() {
 }
 
 fn login() {
+    display_header();
     const SECRET_KEY: &str = "admin"; // Just a placeholder until further functionality is setup
 
     loop {
@@ -35,3 +36,7 @@ fn login() {
         }
     }
 }
+
+fn display_header() {
+    println!("COMPANY NAME // DATE: TIME");
+} 
