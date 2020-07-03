@@ -1,8 +1,11 @@
 use std::io;
 
 fn main() {
+    login();
+}
 
-    const SECRET_KEY: &str = "admin";
+fn login() {
+    const SECRET_KEY: &str = "admin"; // Just a placeholder until further functionality is setup
 
     loop {
         let mut username = String::new();
@@ -20,9 +23,12 @@ fn main() {
             .read_line(&mut password)
             .expect("Failed to read password");
         
+        // Trim off /n's
         let username = username.trim();
         let password = password.trim();
 
+
+        // This is definitely how authentication works
         if password == SECRET_KEY {
             println!("Logged in!");
             break;
