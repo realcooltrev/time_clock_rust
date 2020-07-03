@@ -1,10 +1,17 @@
 use std::io;
 
-fn main() {
-    login();
+struct User {
+    username: String,
+    role: String,
 }
 
-fn login() {
+fn main() {
+    let authenticated_user = login();
+    println!("username: {}", authenticated_user.username);
+    println!("role: {}", authenticated_user.role);
+}
+
+fn login() -> User {
     display_header();
     const SECRET_KEY: &str = "admin"; // Just a placeholder until further functionality is setup
 
@@ -32,7 +39,10 @@ fn login() {
         // This is definitely how authentication works
         if password == SECRET_KEY {
             println!("Logged in!");
-            break;
+            return User {
+                username: String::from(username),
+                role: String::from("employee"),
+            }
         }
     }
 }
