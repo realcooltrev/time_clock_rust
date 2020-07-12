@@ -1,6 +1,7 @@
 pub struct Config {
     pub username: String,
     pub password: String,
+    pub department_review: bool,
 }
 
 impl Config {
@@ -18,7 +19,16 @@ impl Config {
             None => return Err("Didn't get a password"),
         };
 
-        Ok(Config { username, password })
+        let department_review = match args.next() {
+            Some(_) => true,
+            None => false,
+        };
+
+        Ok(Config {
+            username,
+            password,
+            department_review,
+        })
     }
 }
 
@@ -35,20 +45,31 @@ pub struct User {
     pub role: Role,
 }
 
-impl User {
-    pub fn login(config: Config) -> Result<User, &'static str> {
-        const SECRET_KEY: &str = "admin"; // Just a placeholder until further functionality is setup
-        let username = config.username;
-        let role = Role::Employee;
-        let authenticated = config.password == SECRET_KEY;
+pub fn run(config: Config) -> Result<(), &'static str> {
+    let user = login(config)?;
 
-        if !authenticated {
-            return Err("Invalid password");
-        }
-        Ok(User {
-            username,
-            authenticated,
-            role,
-        })
+    println!("Clocked in with role: {:?}!", &user.role);
+    println!("Have a great day, {}", &user.username);
+
+    Ok(())
+}
+
+fn login(config: Config) -> Result<User, &'static str> {
+    const SECRET_KEY: &str = "admin"; // Just a placeholder until further functionality is setup
+    let username = config.username;
+    let role = if config.department_review {
+        Role::Manager
+    } else {
+        Role::Employee
+    };
+    let authenticated = config.password == SECRET_KEY;
+
+    if !authenticated {
+        return Err("Invalid password");
     }
+    Ok(User {
+        username,
+        authenticated,
+        role,
+    })
 }
