@@ -9,17 +9,20 @@ impl Config {
         // Skip the binary name
         args.next();
 
-        let username = match args.next() {
+        // First argument should be username
+        let username = match std::env::args().nth(1) {
             Some(arg) => arg,
             None => return Err("Didn't get a username"),
         };
 
-        let password = match args.next() {
+        // Sencond argument should be password
+        let password = match std::env::args().nth(2) {
             Some(arg) => arg,
             None => return Err("Didn't get a password"),
         };
 
-        let department_review = match args.next() {
+        // Optional third argurment for managers
+        let department_review = match std::env::args().nth(3) {
             Some(_) => true,
             None => false,
         };
