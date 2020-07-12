@@ -1,5 +1,5 @@
 [package]
-name = "time_clock_rust"
+name = "time_clock"
 version = "0.1.0"
 authors = ["Trevor Pierce <yeahtrevorpierce@gmail.com>"]
 edition = "2018"
