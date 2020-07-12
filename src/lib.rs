@@ -33,16 +33,16 @@ impl Config {
 }
 
 #[derive(Debug)]
-pub enum Role {
+enum Role {
     Employee,
     Manager,
 }
 
 #[derive(Debug)]
-pub struct User {
-    pub username: String,
-    pub authenticated: bool,
-    pub role: Role,
+struct User {
+    username: String,
+    authenticated: bool,
+    role: Role,
 }
 
 pub fn run(config: Config) -> Result<(), &'static str> {
