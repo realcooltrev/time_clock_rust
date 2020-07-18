@@ -44,35 +44,47 @@ enum Role {
 #[derive(Debug)]
 struct User {
     username: String,
-    authenticated: bool,
     role: Role,
 }
 
-pub fn run(config: Config) -> Result<(), &'static str> {
-    let user = login(config)?;
+impl User {
+    fn new(username: String, role: Role) -> User {
+        return User { username, role };
+    }
 
-    println!("Clocked in with role: {:?}!", &user.role);
-    println!("Have a great day, {}", &user.username);
+    fn get_username(&self) -> &str {
+        &self.username
+    }
 
-    Ok(())
+    fn get_role(&self) -> &Role {
+        &self.role
+    }
+
+    // Check the user's login credentials and return an authenticated user
+    fn login(config: Config) -> Result<User, &'static str> {
+        const SECRET_KEY: &str = "admin"; // Just a placeholder until further functionality is setup
+
+        let username = config.username;
+        let role = if config.department_review {
+            Role::Manager
+        } else {
+            Role::Employee
+        };
+        let authenticated = config.password == SECRET_KEY;
+
+        if !authenticated {
+            return Err("Invalid password");
+        }
+
+        Ok(User::new(username, role))
+    }
 }
 
-fn login(config: Config) -> Result<User, &'static str> {
-    const SECRET_KEY: &str = "admin"; // Just a placeholder until further functionality is setup
-    let username = config.username;
-    let role = if config.department_review {
-        Role::Manager
-    } else {
-        Role::Employee
-    };
-    let authenticated = config.password == SECRET_KEY;
+pub fn run(config: Config) -> Result<(), &'static str> {
+    let user = User::login(config)?;
 
-    if !authenticated {
-        return Err("Invalid password");
-    }
-    Ok(User {
-        username,
-        authenticated,
-        role,
-    })
+    println!("Clocked in with role: {:?}!", &user.get_role());
+    println!("Have a great day, {:?}", &user.get_username());
+
+    Ok(())
 }
