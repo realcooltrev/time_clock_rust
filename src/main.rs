@@ -1,14 +1,12 @@
-use std::{env, process};
+use std::process;
+use structopt::StructOpt;
 
-use time_clock::config::Config;
+use time_clock::Cli;
 
 fn main() {
-    let config = Config::new(env::args()).unwrap_or_else(|err| {
-        eprintln!("Problem parsing arguments: {}", err);
-        process::exit(1);
-    });
+    let args = Cli::from_args();
 
-    if let Err(e) = time_clock::run(config) {
+    if let Err(e) = time_clock::run(args) {
         eprintln!("{}", e);
         process::exit(1);
     }

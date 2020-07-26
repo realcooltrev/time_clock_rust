@@ -1,4 +1,4 @@
-use crate::config;
+use crate::Cli;
 
 #[derive(Debug)]
 pub enum Role {
@@ -26,16 +26,16 @@ impl User {
     }
 
     // Check the user's login credentials and return an authenticated user
-    pub fn login(config: config::Config) -> Result<User, &'static str> {
+    pub fn login(args: Cli) -> Result<User, &'static str> {
         const SECRET_KEY: &str = "admin"; // Just a placeholder until further functionality is setup
 
-        let username = config.username;
-        let role = if config.department_review {
+        let username = args.username;
+        let role = if args.review {
             Role::Manager
         } else {
             Role::Employee
         };
-        let authenticated = config.password == SECRET_KEY;
+        let authenticated = args.password == SECRET_KEY;
 
         if !authenticated {
             return Err("Invalid password");
