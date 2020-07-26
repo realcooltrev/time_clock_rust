@@ -1,7 +1,7 @@
 use std::process;
 use structopt::StructOpt;
 
-use time_clock::{user, Cli};
+use time_clock::{user::User, Cli};
 
 fn main() {
     let args = Cli::from_args();
@@ -13,10 +13,10 @@ fn main() {
 }
 
 fn run(args: Cli) -> Result<(), &'static str> {
-    let user = user::User::login(args)?;
+    let user = User::login(args)?;
 
-    println!("Clocked in with role: {:?}!", &user.get_role());
-    println!("Have a great day, {:?}", &user.get_username());
+    println!("Clocked in with role: {:?}!", user.get_role());
+    println!("Have a great day, {:?}", user.get_username());
 
     Ok(())
 }
