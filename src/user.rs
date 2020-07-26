@@ -1,4 +1,4 @@
-use crate::Cli;
+use super::Cli;
 
 #[derive(Debug)]
 pub enum Role {
