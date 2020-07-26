@@ -1,13 +1,22 @@
 use std::process;
 use structopt::StructOpt;
 
-use time_clock::Cli;
+use time_clock::{user, Cli};
 
 fn main() {
     let args = Cli::from_args();
 
-    if let Err(e) = time_clock::run(args) {
+    if let Err(e) = run(args) {
         eprintln!("{}", e);
         process::exit(1);
     }
+}
+
+fn run(args: Cli) -> Result<(), &'static str> {
+    let user = user::User::login(args)?;
+
+    println!("Clocked in with role: {:?}!", &user.get_role());
+    println!("Have a great day, {:?}", &user.get_username());
+
+    Ok(())
 }
