@@ -12,7 +12,7 @@ pub struct Cli {
     #[structopt(short, long, env = "TC_PASS")]
     pub password: String,
 
-    /// Review department timesheets
+    /// Review department timesheets [`true` or `false`]
     #[structopt(short, long, parse(try_from_str))]
     pub review: bool,
 }
