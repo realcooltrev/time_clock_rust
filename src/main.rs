@@ -2,8 +2,11 @@ use std::process;
 use time_clock::user::User;
 
 use clap::{clap_app, ArgMatches};
+use sqlx::postgres::PgConnection;
+use sqlx::Connection;
 
-fn main() -> std::io::Result<()> {
+#[async_std::main]
+async fn main() -> std::io::Result<()> {
     // Setup CLI interface
     let matches = clap_app!(app =>
         (version: "0.1.0")
@@ -14,6 +17,7 @@ fn main() -> std::io::Result<()> {
     )
     .get_matches();
 
+    let conn = PgConnection::connect("postgres://postgres:password@localhost/test").await;
     if let Err(e) = run(matches) {
         eprintln!("{}", e);
         process::exit(1);
