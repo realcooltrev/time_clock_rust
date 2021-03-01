@@ -26,6 +26,12 @@ fn run(matches: ArgMatches) -> Result<(), &'static str> {
     let username = matches.value_of("USERNAME").unwrap();
     let password = matches.value_of("PASSWORD").unwrap();
 
+    /*
+     * We should probably check for environment vars to get the database connection.
+     * If not set, prompt the user to provide the connection details, then write the
+     * values to a .env file and set the environment variables then at runtime.
+     * For future runs, the .env file will be sourced for every rune.
+     */
     let user = User::login(username, password)?;
 
     println!("Clocked in with role: {:?}!", user.get_role());
