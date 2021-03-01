@@ -1,35 +1,32 @@
-use serde::{Deserialize, Serialize};
-use std::env;
-use std::fs;
 use std::process;
-use structopt::StructOpt;
-use time_clock::{user::User, Cli};
+use time_clock::user::User;
 
-#[derive(Serialize, Deserialize, Debug)]
-struct Configs {
-    connection_string: String,
-}
+use clap::{clap_app, ArgMatches};
 
 fn main() -> std::io::Result<()> {
-    // Need to use serde to read configs for database from config.json file
+    // Setup CLI interface
+    let matches = clap_app!(app =>
+        (version: "0.1.0")
+        (author: "Trevor Pierce <yeahtrevorpierce@gmail.com>")
+        (about: "A CLI solution for clocking in/out that no one asked for")
+        (@arg USERNAME: -u --user +takes_value "Sets the username for the user clocking in/out")
+        (@arg PASSWORD: -p --password +takes_value "Sets the password for the user clocking in/out")
+    )
+    .get_matches();
 
-    let filed_configs = fs::read_to_string("config.json").expect("Could not load config.json file");
-    let configs = serde_json::to_string(&filed_configs).unwrap();
-
-    println!("{}", configs);
-
-    Ok(())
-
-    /*let args = Cli::from_args();
-
-    if let Err(e) = run(args) {
+    if let Err(e) = run(matches) {
         eprintln!("{}", e);
         process::exit(1);
-    }*/
+    }
+
+    Ok(())
 }
 
-fn run(args: Cli) -> Result<(), &'static str> {
-    let user = User::login(args)?;
+fn run(matches: ArgMatches) -> Result<(), &'static str> {
+    let username = matches.value_of("USERNAME").unwrap();
+    let password = matches.value_of("PASSWORD").unwrap();
+
+    let user = User::login(username, password)?;
 
     println!("Clocked in with role: {:?}!", user.get_role());
     println!("Have a great day, {:?}", user.get_username());

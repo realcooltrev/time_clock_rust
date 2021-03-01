@@ -1,5 +1,3 @@
-use super::Cli;
-
 #[derive(Debug)]
 pub enum Role {
     Employee,
@@ -26,71 +24,50 @@ impl User {
     }
 
     // Check the user's login credentials and return an authenticated user
-    pub fn login(args: Cli) -> Result<User, &'static str> {
+    pub fn login(username: &str, password: &str) -> Result<User, &'static str> {
         const SECRET_KEY: &str = "admin"; // Just a placeholder until further functionality is setup
+        const MANAGER_USERNAME: &str = "trev";
+        let user_role;
 
-        let username = args.username;
-        let role = if args.review {
-            Role::Manager
-        } else {
-            Role::Employee
-        };
-        let authenticated = args.password == SECRET_KEY;
-
-        if !authenticated {
+        if password != SECRET_KEY {
             return Err("Invalid password");
         }
 
-        Ok(User::new(username, role))
+        if username == MANAGER_USERNAME {
+            user_role = Role::Manager;
+        } else {
+            user_role = Role::Employee;
+        }
+
+        Ok(User::new(String::from(username), user_role))
     }
 }
 
 #[cfg(test)]
 mod tests {
-    use super::Cli;
     use crate::user::*;
 
     #[test]
     fn successful_login() {
-        let cli = Cli {
-            username: String::from("test_user"),
-            password: String::from("admin"),
-            review: false,
-        };
-        let user = User::login(cli);
+        let user = User::login("test_user", "admin");
         assert!(user.is_ok());
     }
 
     #[test]
     fn bad_login() {
-        let cli = Cli {
-            username: String::from("test_user"),
-            password: String::from("bad_pass"),
-            review: false,
-        };
-        let user = User::login(cli);
+        let user = User::login("test_user", "bad_pass");
         assert!(user.is_err());
     }
 
     #[test]
     fn user_is_manager() {
-        let cli = Cli {
-            username: String::from("test_user"),
-            password: String::from("admin"),
-            review: true,
-        };
-        let user = User::login(cli).unwrap();
+        let user = User::login("trev", "admin").unwrap();
         assert!(matches!(user.get_role(), Role::Manager));
     }
 
     #[test]
     fn user_is_employee() {
-        let cli = Cli {
-            username: String::from("test_user"),
-            password: String::from("admin"),
-            review: false,
-        };
-        let user = User::login(cli).unwrap();
+        let user = User::login("test_user", "admin").unwrap();
         assert!(matches!(user.get_role(), Role::Employee));
     }
 }
